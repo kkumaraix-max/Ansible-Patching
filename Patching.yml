@@ -1,0 +1,33 @@
+#simple playbook to patch rhel servers
+
+- name: patch update
+  hosts: app_servers
+  become: true
+  gather_facts: yes
+  tasks:
+    - name: print existing OS kernel version
+      ansible.builtin.shell: uname -r
+      register: kernel_info
+    - name: print information
+      ansible.builtin.debug:
+        msg: "{{ kernel_info.stdout }}"  
+
+    - name: initaite patching
+      ansible.builtin.dnf:
+        name: kernel
+        state: latest
+
+    - name: initiate reboot
+      ansible.builtin.reboot:
+        msg: " server will be rebooting soon"
+        # reboot_timeout: 600
+        # pre_reboot_delay: 0
+        # post_reboot_delay: 30
+      
+    - name: print present OS kernel version
+      ansible.builtin.shell: uname -r
+      register: kernel_info
+    - name: print information
+      ansible.builtin.debug:
+        msg: "{{ kernel_info.stdout }}"    
+          

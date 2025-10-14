@@ -1,0 +1,18 @@
+- name: check os version
+  hosts: db_servers
+  become: true
+  tasks:
+    - name: provides detailed information about OS
+      ansible.builtin.shell: cat /etc/os-release
+      register: os_info
+    - name: print information
+      ansible.builtin.debug:
+        msg: "{{ os_info.stdout }}"
+
+    - name: checking kernel version with uname -r
+      ansible.builtin.shell: uname -r
+      register: kernel_info
+    - name: print information
+      ansible.builtin.debug:
+        msg: "{{ kernel_info.stdout }}"
+
